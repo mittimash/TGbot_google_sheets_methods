@@ -1,3 +1,4 @@
+//устанавливает команды бота
 function setMyCommands(commands) {
   if (commands==undefined) {
     commands = [
@@ -15,7 +16,7 @@ function setMyCommands(commands) {
       };
       UrlFetchApp.fetch('https://api.telegram.org/bot' + token + "/", data);
 }
-
+// ставит реакцию под сообщением пользователя, по умолчанию сердечко
 function setMessageReaction(chat_id, message_id, reaction, is_big=true) {
   if (reaction==undefined) {
     reaction = [{"type": "emoji", "emoji": "❤️"}]
@@ -37,12 +38,13 @@ function setMessageReaction(chat_id, message_id, reaction, is_big=true) {
       };
       UrlFetchApp.fetch('https://api.telegram.org/bot' + token + "/", data);
 }
-
+//получает информацию о боте в json
 function getMe() {
   let response = UrlFetchApp.fetch("https://api.telegram.org/bot" + token + "/getMe");
   console.log(response.getContentText());
 }
 
+// закрывает все вебхуки
 function close() {
   let response = UrlFetchApp.fetch("https://api.telegram.org/bot" + token + "/close");
   console.log(response.getContentText());
@@ -66,14 +68,14 @@ function getFormatsStyles() {
 <blockquote expandable>Expandable block quotation started\nExpandable block quotation continued\nExpandable block quotation continued\nHidden by default part of the block quotation started\nExpandable block quotation continued\nThe last line of the block quotation</blockquote>`
 }
 
-//высылает в чат пользователю примеры оформления текста, 1 соббщением придет пример, вторым код которым этот пример написан.
+//высылает в чат пользователю примеры оформления текста, 1 сообщением придет пример, вторым код которым этот пример написан.
 function sendFormatsStyles(chat_id) {
   let text = getFormatsStyles()
   sendMessage(chat_id, text)
   sendMessageOptionased(chat_id, text, true, true, 'Markdown')
 }
 
-
+// отправляет пользователю какое действие сейчас совершает бот (под портретом бота такой текст 'печатает...', 'записывает видео' и другие)
 function sendChatAction(chat_id, action) {
   let data = {
       method: "post",
@@ -129,7 +131,7 @@ function sendMediaGroup(chat_id, media, type, disable_notification=false, protec
   UrlFetchApp.fetch('https://api.telegram.org/bot' + token + "/", data);
 }
 
-//отправляет фидео в чат
+//отправляет видео в чат более новая версия.
 function sendVideoNote(chat_id, videos, caption, keyBoard, disable_notification=false, protect_content=false) {
   sendChatAction(chat_id,'upload_video_note')
   let data = {
@@ -147,7 +149,7 @@ function sendVideoNote(chat_id, videos, caption, keyBoard, disable_notification=
   UrlFetchApp.fetch('https://api.telegram.org/bot' + token + "/", data);
 }
 
-//отправляет фидео в чат
+//отправляет видео в чат
 function sendVideo(chat_id, video, caption, keyBoard, disable_notification=false, protect_content=false, parse_mode='HTML') {
   sendChatAction(chat_id,'upload_video')
   let data = {
@@ -165,7 +167,7 @@ function sendVideo(chat_id, video, caption, keyBoard, disable_notification=false
   };
   UrlFetchApp.fetch('https://api.telegram.org/bot' + token + "/", data);
 }
-
+// высылает документ вес не более 50kb
 function sendDocument(chat_id, document, caption, keyBoard, disable_notification=false, protect_content=false, parse_mode='HTML') {
   sendChatAction(chat_id,'upload_document')
   let data = {
@@ -227,7 +229,7 @@ function sendPhoto(chat_id, photo, caption, keyBoard,show_caption_above_media=fa
 }
 
 //отправляет сообщение
-function sendMessage(chat_id, text, keyBoard) {
+function sendText(chat_id, text, keyBoard) {
   sendChatAction(chat_id,'typing')
   let data = {
     method: "post",
@@ -245,7 +247,8 @@ function sendMessage(chat_id, text, keyBoard) {
 //отправляет сообщение с возможностью включения дополнительных опций
 //disable_notification false - означает что сообщение придет с уведомлением (звуковым оповещением) true - без уведомления
 //protect_content false означает что данное сообщение можно будет еще раз переслать кому то еще. true - данное сообщение будет нельзя пересылать.
-function sendMessageOptionased(chat_id, text, disable_notification, protect_content, parse_mode="HTML", keyBoard) {
+
+function sendMessage(chat_id, text, disable_notification, protect_content, parse_mode="HTML", keyBoard) {
   sendChatAction(chat_id,'typing')
   let data = {
     method: "post",
@@ -265,6 +268,7 @@ function sendMessageOptionased(chat_id, text, disable_notification, protect_cont
 //пересылает сообщение по его id из одного чата в другой
 //disable_notification false - означает что сообщение придет с уведомлением (звуковым оповещением) true - без уведомления
 //protect_content false означает что данное сообщение можно будет еще раз переслать кому то еще. true - данное сообщение будет нельзя пересылать.
+
 function forwardMessage(chat_id, from_chat_id, message_id, disable_notification=false, protect_content=false)  {
   sendChatAction(chat_id,'typing')
   let data = {
@@ -284,6 +288,7 @@ function forwardMessage(chat_id, from_chat_id, message_id, disable_notification=
 //пересылает несколько сообщений по их id из одного чата в другой
 //disable_notification false - означает что сообщение придет с уведомлением (звуковым оповещением) true - без уведомления
 //protect_content false означает что данное сообщение можно будет еще раз переслать кому то еще. true - данное сообщение будет нельзя пересылать.
+
 function forwardMessages(chat_id, from_chat_id, message_ids, disable_notification=false, protect_content=false)  {
   sendChatAction(chat_id,'typing')
   let data = {
